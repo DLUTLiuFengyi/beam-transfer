@@ -2,11 +2,11 @@ import torch
 import math
 from torchvision import transforms
 from dataset import BeamDataset
-import segmentation.net as snet
+import segmentation.v01.net as snet
 from torch.utils.data import DataLoader
 import torch.nn as nn
 from torch.autograd import Variable
-from beam_utils import judge_cuda
+from segmentation.v01.beam_utils import judge_cuda
 
 
 """
@@ -62,17 +62,11 @@ def train(pth_dir=r"D:\beam-transfer\pth"):
             out = model(batch_x)
 
             loss = loss_func(out, batch_y)
-            """
-            使用item()的原因：如果loss都直接用loss表示，结果是每次迭代，空间占用会增加，直到cpu或者gup爆炸。
-            PyTorch 0.4.0版本将Variable和Tensor融合起来，可以视Variable为requires_grad=True的Tensor。
-            输出的loss的数据类型是Variable。如果这里直接将loss加起来，系统会认为这里也是计算图的一部分，导致网络会一直延伸变大。
-            """
+            # 损失值累加（用item()原因是新版本pytorch把Variable和Tensor类合并，输出的loss是Variable类型）
             train_loss += loss.item()
 
-            """
-            分别找出tensor每行中的最大值，并返回索引（即为对应的预测种类的数字）
-            torch.max返回两个值，第一个（_）是具体的预测概率值，第二个（pred）是预测的种类
-            """
+            # 分别找出tensor每行中的最大值，并返回索引（即为对应的预测种类的数字）
+            # torch.max返回两个值，第一个（_）是具体的预测概率值，第二个（pred）是预测的种类
             _, pred = torch.max(out, 1)
 
             # 准确率计算，需要除以图片尺寸
@@ -80,31 +74,21 @@ def train(pth_dir=r"D:\beam-transfer\pth"):
             train_acc += train_correct.item()
             # math.ceil(x) 返回大于等于参数x的最小整数
             print("epoch: %2d/%d batch %3d/%d Train loss: %.6f, Acc: %.6f" %
-                  (epoch + 1, epochs, batch, math.ceil(len(train_data) / batch_size),
+                  (epoch + 1, epochs, batch+1, math.ceil(len(train_data) / batch_size),
                    loss.item(), train_correct.item() / len(batch_x)))
 
-            """
-            把梯度置零，即把loss关于weight的导数变成0。目前是算一个batch计算一次梯度，然后进行一次梯度更新。
-            这里梯度值就是对应偏导数的计算结果,在进行下一次batch梯度计算的时候，前一个batch的梯度计算结果，没有保留的必要了。
-            """
+            # 把梯度置零，即把loss关于weight的导数变成0。目前是算一个batch计算一次梯度，然后进行一次梯度更新
             optimizer.zero_grad()
-            """
-            调用backward，Pytorch的autograd就会自动沿着计算图反向传播计算每一个叶子节点的梯度
-            来计算链式法则求导之后计算的结果值
-            """
+            # 沿着计算图反向传播计算每一个叶子节点的梯度，来计算链式法则求导之后计算的结果值
             loss.backward()
-            """
-            更新参数，即更新权重参数w和b
-            """
+            # 更新参数，即更新权重参数w和b
             optimizer.step()
 
         scheduler.step()  # 更新学习率
         print("Train loss: %.6f, Acc: %.6f" % (train_loss / (math.ceil(len(train_data) / epochs)),
                                                train_acc / (len(train_data))))
 
-        """
-        模型验证
-        """
+        # 模型验证
         model.eval()
         eval_loss = 0
         eval_acc = 0

@@ -3,7 +3,7 @@ import torch
 import cv2
 from torch.autograd import Variable
 from PIL import Image
-from beam_utils import normalize_array, get_tensor_from_img_by_cv2, judge_cuda
+from segmentation.v01.beam_utils import normalize_array, get_tensor_from_img_by_cv2, judge_cuda
 
 """
 预测，输入原始图片，输出模型输出（tensor类型）

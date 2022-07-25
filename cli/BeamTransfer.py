@@ -1,5 +1,5 @@
 import argparse
-from segmentation.process import transform_beam
+from segmentation.v01.process import transform_beam
 
 def main():
     args_parser = argparse.ArgumentParser()

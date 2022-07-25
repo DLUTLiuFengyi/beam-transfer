@@ -1,27 +1,11 @@
 import os.path
-import segmentation.detect as dt
+import segmentation.v01.detect as dt
 
 """
 语义分割提取光线
 返回掩码图和光线图
 """
 def pull_the_beam(in_path, out_path, pth_path=r"D:\pycharmprojects\beam-transfer\pth\simple_net_1.pth"):
-
-    """
-    初始方案*语义分割（读照片->语义分割->获得掩码图->语义分割结果图）
-
-    # 原始图
-    img = Image.open(in_path).convert("RGB")
-    # 执行语义分割，获取分割后的结果图（目标区域为白色，非目标区域为黑色）
-    beam_mask = detect.predict(img).convert("L")
-    # 新建黑色背景图，用于后面使用透明蒙版混合图像来创建合成图像
-    empty = Image.new("RGBA", (img.size), 0)
-    # 原图 + 黑底图 + 掩码图 = 语义分割抽取结果图
-    beam_img = Image.composite(img, empty, mask=beam_mask)
-    beam_img.save(out_path)
-
-    （暂时不用）
-    """
 
     in_path_split = os.path.split(in_path)
     out_path_split = os.path.split(out_path)
