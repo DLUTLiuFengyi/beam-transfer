@@ -6,10 +6,10 @@ from torch.utils.data import Dataset
 from PIL import Image
 
 class BeamDataset(Dataset):
-    def __init__(self, root=r"D:\beam-transfer\train", train_txt="train.txt", train_img_dir="beams", train_label_dir="labels",
+    def __init__(self, root=r"D:\beam-transfer\train", name_file="train.txt", train_img_dir="beams", train_label_dir="labels",
                  height=480, width=640,
                  transform=None, target_transform=None):
-        txt = open(os.path.join(root, train_txt), 'r')
+        txt = open(os.path.join(root, name_file), 'r')
         imgs = []
         for line in txt:
             line = line.strip('\n') # 删去换行符

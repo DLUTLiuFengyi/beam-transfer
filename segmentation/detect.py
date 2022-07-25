@@ -27,8 +27,8 @@ def predict(in_dir=r"D:\beam-transfer\try", in_name=r"1008.png",
     print("out_array.size(): " + str(out_array.shape))
 
     # array_to_img_1(in_dir, in_name, out_dir, out_array[0])
-    # array_to_img_2(in_dir, in_name, out_dir, out_array[0])
-    return array_to_img_3(in_dir, in_name, out_dir, out_array[0])
+    array_to_img_2(in_dir, in_name, out_dir, out_array[0])
+    # return array_to_img_3(in_dir, in_name, out_dir, out_array[0])
 
 """
 模型输出的tensor转成numpy的array，方式1
@@ -84,5 +84,5 @@ def array_to_img_3(in_dir, in_name, out_dir, array):
     return mask_img, beam_img
 
 if __name__ == "__main__":
-    predict(in_dir=r"D:\beam-transfer\try", in_name=r"1007.png",
-            out_dir=r"D:\beam-transfer\out", pth_path=r"D:\beam-transfer\pth2\epoch_9.pth")
+    predict(in_dir=r"D:\beam-transfer\try", in_name=r"1006.png",
+            out_dir=r"D:\beam-transfer\out", pth_path=r"D:\beam-transfer\pth2\epoch_10.pth")

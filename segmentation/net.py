@@ -37,7 +37,7 @@ class SimpleNet(nn.Module):
         conv2_out = self.conv2(conv1_out)
         conv3_out = self.conv3(conv2_out)
         lb = self.lb(conv3_out)
-        # 有的数据集的输入图像是4维大小（batch，通道，宽，高）
+        # 输入图像数据是4维大小（batch，通道，宽，高）
         # interpolate函数用来对输入的特征图做插值放大，用双线性插值法
         # print("x.size(): " + str(x.size()))
         out = F.interpolate(lb, x.size()[2:], mode="bilinear", align_corners=True) # 取宽和高
