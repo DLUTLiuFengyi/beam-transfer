@@ -27,12 +27,11 @@ cv2方式打开图片
 """
 def get_tensor_from_img_by_cv2(img_path):
     img = cv2.imread(img_path)
-    # img = cv2.resize(img, (640, 480))
+    img = cv2.resize(img, (640, 480))
     img_transfer = transforms.Compose([
         transforms.ToTensor()
     ])
-    # unsqueeze(0) 在第一个位置添加一个维度，3*480*640 -> 1*3*480*640
-    img_tensor = img_transfer(img).unsqueeze(0)
+    img_tensor = img_transfer(img).unsqueeze(0) # unsqueeze(0)作用：3*480*640 -> 1*3*480*640
     return img_tensor
 
 """
@@ -68,7 +67,7 @@ def normalize_array(array):
     for i in range(rows):
         for j in range(cols):
             array[i, j] = ((array[i, j] - min) / (max-min)) * 255
-            if array[i, j] < 10:
+            if array[i, j] < 30:
                 array[i, j] = 255
             else:
                 array[i, j] = 0

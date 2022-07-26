@@ -33,14 +33,13 @@ class SimpleNet(nn.Module):
         )
 
     def forward(self, x):
+        # x.size()  batch_size * 3 * H * W
         conv1_out = self.conv1(x)
         conv2_out = self.conv2(conv1_out)
         conv3_out = self.conv3(conv2_out)
         lb = self.lb(conv3_out)
-        # 输入图像数据是4维大小（batch，通道，宽，高）
         # interpolate函数用来对输入的特征图做插值放大，用双线性插值法
-        # print("x.size(): " + str(x.size()))
-        out = F.interpolate(lb, x.size()[2:], mode="bilinear", align_corners=True) # 取宽和高
-        # print("out.size(): " + str(out.size()))
+        out = F.interpolate(lb, x.size()[2:], mode="bilinear", align_corners=True)
+        # out.size()  batch_size * 2 * H * W
         return out
 
